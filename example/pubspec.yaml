@@ -12,8 +12,8 @@ dependencies:
   bloc: ^0.15.0
   flutter_bloc: ^0.21.0
   cupertino_icons: ^0.1.2
-  fb_auth:
-    path: ../
+  fb_auth: any
+    # path: ../
 
 dev_dependencies:
   flutter_test:
