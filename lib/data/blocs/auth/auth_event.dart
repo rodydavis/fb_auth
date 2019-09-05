@@ -14,15 +14,21 @@ class LoginEvent extends AuthEvent {
 }
 
 class CreateAccount extends AuthEvent {
-  CreateAccount(this.name, this.username, this.password);
+  CreateAccount(this.username, this.password,
+      {this.displayName, this.photoUrl});
 
-  final String name, username, password;
+  final String username, password;
+  final String displayName, photoUrl;
 }
-
-class LoginGoogle extends AuthEvent {}
 
 class LogoutEvent extends AuthEvent {
   LogoutEvent(this.user);
+
+  final AuthUser user;
+}
+
+class UpdateUser extends AuthEvent {
+  UpdateUser(this.user);
 
   final AuthUser user;
 }
@@ -33,8 +39,11 @@ class ForgotPassword extends AuthEvent {
   final String email;
 }
 
-class EditName extends AuthEvent {
-  EditName(this.name);
+class SendEmailVerification extends AuthEvent {}
 
-  final String name;
+class EditInfo extends AuthEvent {
+  EditInfo(this.user, {this.displayName, this.photoUrl});
+
+  final String displayName, photoUrl;
+  final AuthUser user;
 }

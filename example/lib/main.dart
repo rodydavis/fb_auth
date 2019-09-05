@@ -1,8 +1,6 @@
-import 'package:fb_auth/data/blocs/blocs.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:fb_auth/fb_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,18 +12,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  StreamSubscription<AuthUser> _userChanged;
   final _auth = AuthBloc(
     saveUser: _saveUser,
     deleteUser: _deleteUser,
   );
 
-  static _deleteUser(user) async {}
+  static _deleteUser() async {}
   static _saveUser(user) async {}
 
   @override
   void initState() {
     _auth.dispatch(CheckUser());
+    final _fbAuth = FBAuth();
+    _userChanged = _fbAuth.onAuthChanged().listen((user) {
+      _auth.dispatch(UpdateUser(user));
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _auth.dispose();
+    _userChanged.cancel();
+    super.dispose();
   }
 
   @override
@@ -112,7 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        _auth.dispatch(CreateAccount(_name, _email, _password));
+                        _auth.dispatch(CreateAccount(_email, _password,
+                            displayName: _name));
                       }
                     },
                   )),

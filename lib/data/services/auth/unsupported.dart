@@ -1,7 +1,12 @@
 import '../../classes/index.dart';
 
-class AuthUtils {
+class FBAuth {
   Future<AuthUser> login(String username, String password) async {
+    throw 'Platform Not Supported';
+  }
+
+  Future<AuthUser> createAccount(String username, String password,
+      {String displayName, String photoUrl}) async {
     throw 'Platform Not Supported';
   }
 
@@ -13,7 +18,19 @@ class AuthUtils {
     throw 'Platform Not Supported';
   }
 
-   Future<AuthUser> loginGoogle() async {
+  Stream<AuthUser> onAuthChanged() {
+    throw 'Platform Not Supported';
+  }
+
+  Future editInfo({String displayName, String photoUrl}) async {
+    throw 'Platform Not Supported';
+  }
+
+  Future forgotPassword(String email) async {
+    throw 'Platform Not Supported';
+  }
+
+  Future sendEmailVerification() async {
     throw 'Platform Not Supported';
   }
 }

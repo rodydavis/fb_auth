@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../classes/index.dart';
 
-class AuthUtils {
+class FBAuth {
   final _auth = FirebaseAuth.instance;
 
   Future<AuthUser> login(String username, String password) async {
@@ -13,7 +13,9 @@ class AuthUtils {
         final _user = AuthUser(
           uid: _result.user.uid,
           displayName: _result.user.displayName,
-          email: _result.user.isAnonymous ? null : _result.user.email,
+          email: _result.user?.email,
+          isAnonymous: _result.user.isAnonymous,
+          isEmailVerified: _result.user.isEmailVerified,
         );
         return _user;
       }
@@ -23,8 +25,18 @@ class AuthUtils {
     return null;
   }
 
-  Future<AuthUser> loginGoogle() async {
-    throw 'Platform Not Supported';
+  Stream<AuthUser> onAuthChanged() {
+    return _auth.onAuthStateChanged.map((user) {
+      if (user == null) return null;
+      final _user = AuthUser(
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user?.email,
+        isAnonymous: user.isAnonymous,
+        isEmailVerified: user.isEmailVerified,
+      );
+      return _user;
+    });
   }
 
   Future logout() async {
@@ -43,7 +55,9 @@ class AuthUtils {
         final _user = AuthUser(
           uid: _result.uid,
           displayName: _result.displayName,
-          email: _result.isAnonymous ? null : _result.email,
+          email: _result?.email,
+          isAnonymous: _result.isAnonymous,
+          isEmailVerified: _result.isEmailVerified,
         );
         return _user;
       }
@@ -51,5 +65,44 @@ class AuthUtils {
       print('FBAuthUtils -> currentUser -> $e');
     }
     return null;
+  }
+
+  Future editInfo({String displayName, String photoUrl}) async {
+    final _user = await _auth.currentUser();
+    final _info = UserUpdateInfo();
+    if (displayName != null) _info.displayName = displayName;
+    if (photoUrl != null) _info.photoUrl = photoUrl;
+    try {
+      await _user.updateProfile(_info);
+    } catch (e) {
+      throw 'Error editInfo -> $e';
+    }
+  }
+
+  Future forgotPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      throw 'Error forgotPassword -> $e';
+    }
+  }
+
+  Future sendEmailVerification() async {
+    try {
+      final _user = await _auth.currentUser();
+      await _user.sendEmailVerification();
+    } catch (e) {
+      throw 'Error sendEmailVerification -> $e';
+    }
+  }
+
+  Future<AuthUser> createAccount(String username, String password,
+      {String displayName, String photoUrl}) async {
+    final _user = await _auth.createUserWithEmailAndPassword(
+        email: username, password: password);
+    if (_user != null) {
+      await editInfo(displayName: displayName, photoUrl: photoUrl);
+    }
+    return await currentUser();
   }
 }

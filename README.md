@@ -4,11 +4,62 @@ A new flutter plugin project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+Setup your Bloc
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```dart
+final _auth = AuthBloc();
+```
+
+
+
+## Actions
+
+- Check Current User
+
+```dart
+_auth.dispatch(CheckUser());
+```
+
+- Listen for Auth Changes
+
+```dart
+_userChanged = _fbAuth.onAuthChanged().listen((user) {
+    _auth.dispatch(UpdateUser(user));
+});
+```
+
+- Logout
+
+```dart
+_auth.dispatch(LogoutEvent(_user));
+```
+
+- Login
+
+```dart
+  _auth.dispatch(LoginEvent(_email, _password));
+```
+
+- Create Account
+
+```dart
+_auth.dispatch(CreateAccount(_email, _password, displayName: _name));
+```
+
+- Edit Info
+
+```dart
+_auth.dispatch(EditInfo(displayName: _name));
+```
+
+- Forgot Password
+
+```dart
+_auth.dispatch(ForgotPassword(_email));
+```
+
+- Send Email Verification
+
+```dart
+_auth.dispatch(SendEmailVerification());
+```
