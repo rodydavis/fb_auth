@@ -77,7 +77,7 @@ _auth.dispatch(LogoutEvent(_user));
 - Login
 
 ```dart
-  _auth.dispatch(LoginEvent(_email, _password));
+_auth.dispatch(LoginEvent(_email, _password));
 ```
 
 - Create Account
