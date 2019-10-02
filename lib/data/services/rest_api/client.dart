@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -12,10 +13,13 @@ class FbClient implements FBAuth {
     this.app, {
     @required this.onSave,
     @required this.onLoad,
-  });
+  }) {
+    _onAuthChanged = StreamController<AuthUser>();
+  }
 
   @override
   final FbApp app;
+  StreamController<AuthUser> _onAuthChanged;
 
   @override
   Future<AuthUser> createAccount(String username, String password,
@@ -75,7 +79,17 @@ class FbClient implements FBAuth {
 
   @override
   Future forgotPassword(String email) async {
-    // throw 'Platform Not Supported';
+    final _url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${app.apiKey}';
+
+    var result = await http.post(
+      _url,
+      body: json.encode({
+        'requestType': 'PASSWORD_RESET',
+        "identifier": email,
+      }),
+    );
+    return result;
   }
 
   @override
@@ -94,18 +108,26 @@ class FbClient implements FBAuth {
 
   @override
   Future logout() async {
-    // throw 'Platform Not Supported';
+    onSave({});
+    _onAuthChanged.add(null);
   }
 
   @override
   Stream<AuthUser> onAuthChanged() {
-    // throw 'Platform Not Supported';
-    return null;
+    return _onAuthChanged.stream;
   }
 
   @override
   Future sendEmailVerification() async {
-    // throw 'Platform Not Supported';
+    FirestoreJsonAccessToken token = await _loadToken();
+    var result = await http.post(
+      'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${app.apiKey}',
+      body: json.encode({
+        "idToken": token?.idToken,
+        "requestType": 'VERIFY_EMAIL',
+      }),
+    );
+    return result;
   }
 
   @override
@@ -143,13 +165,15 @@ class FbClient implements FBAuth {
       for (var item in _users) {
         final _user = FirebaseUser(item, token.idToken);
         if (_user.uid == token.localId) {
-          return AuthUser(
+          final _auth = AuthUser(
             displayName: _user?.displayName,
             email: _user?.email,
             isAnonymous: _user?.isAnonymous ?? true,
             isEmailVerified: _user?.isEmailVerified ?? false,
             uid: _user?.uid,
           );
+          _onAuthChanged.add(_auth);
+          return _auth;
         }
       }
     return null;
