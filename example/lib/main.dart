@@ -34,6 +34,7 @@ class _MyAppState extends State<MyApp> {
     storageBucket: "ampstor.appspot.com",
     messagingSenderId: "561515444898",
     appId: "1:561515444898:web:9060ee5d860d2ef2",
+    measurementId: "G-2WF699JDJP",
   );
 
   AuthBloc _auth;

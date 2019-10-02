@@ -7,6 +7,7 @@ class FbApp {
     this.storageBucket,
     this.messagingSenderId,
     this.appId,
+    this.measurementId,
   });
 
   final String apiKey;
@@ -16,4 +17,5 @@ class FbApp {
   final String storageBucket;
   final String messagingSenderId;
   final String appId;
+  final String measurementId;
 }

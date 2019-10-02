@@ -85,6 +85,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                   },
                 )),
+                ListTile(
+                    title: RaisedButton(
+                  child: Text('Start as Guest'),
+                  onPressed: () {
+                    _auth.dispatch(LoginGuest());
+                  },
+                )),
                 if (state is AuthLoadingState) ...[CircularProgressIndicator()],
               ],
             ),

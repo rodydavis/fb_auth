@@ -31,7 +31,7 @@ class FbClient implements FBAuth {
     FirestoreJsonAccessToken token = await _saveToken(result);
     await editInfo(displayName: displayName, photoUrl: photoUrl);
     token = await _loadToken();
-    return _getUser(token?.idToken);
+    return _getUser(token);
   }
 
   @override
@@ -79,7 +79,7 @@ class FbClient implements FBAuth {
       },
     );
     final token = await _saveToken(result);
-    return _getUser(token?.idToken);
+    return _getUser(token);
   }
 
   @override
@@ -102,12 +102,12 @@ class FbClient implements FBAuth {
   Future<AuthUser> startAsGuest() async {
     final result = await http.post(
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${app.apiKey}',
-      body: {
+      body: json.encode({
         "returnSecureToken": true,
-      },
+      }),
     );
     FirestoreJsonAccessToken token = await _saveToken(result);
-    return _getUser(token?.idToken);
+    return _getUser(token);
   }
 
   final Future<Map<String, dynamic>> Function() onLoad;
@@ -116,26 +116,24 @@ class FbClient implements FBAuth {
 
   Future<FirestoreJsonAccessToken> _saveToken(http.Response result) async {
     final _data = json.decode(result.body);
+    print('Token -> $_data');
     final token = FirestoreJsonAccessToken(_data, DateTime.now());
     await onSave(_data);
     return token;
   }
 
-  Future<AuthUser> _getUser(String uid) async {
+  Future<AuthUser> _getUser(FirestoreJsonAccessToken token) async {
     http.Response result = await http.post(
-      'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${app.apiKey}',
-      body: {
-        "idToken": uid,
-        "returnSecureToken": true,
-      },
-    );
-    final _data = json.decode(result.body);
-    final _users = List.from(_data);
-
+        'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${app.apiKey}',
+        body: json.encode({
+          "idToken": token.idToken,
+          "returnSecureToken": true,
+        }));
+    final _users = List.from(json.decode(result.body)['users']);
     if (result != null)
       for (var item in _users) {
-        final _user = FirebaseUser(item, uid);
-        if (_user.uid == uid) {
+        final _user = FirebaseUser(item, token.idToken);
+        if (_user.uid == token.localId) {
           return AuthUser(
             displayName: _user?.displayName,
             email: _user?.email,
