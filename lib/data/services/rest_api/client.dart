@@ -26,11 +26,13 @@ class FbClient implements FBAuth {
       {String displayName, String photoUrl}) async {
     final result = await http.post(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${app.apiKey}',
-        body: json.encode({
-          "email": username,
-          "password": password,
-          "returnSecureToken": true,
-        }));
+        body: json.encode(
+          {
+            "email": username,
+            "password": password,
+            "returnSecureToken": true,
+          },
+        ));
     FirestoreJsonAccessToken token = await _saveToken(result);
     await editInfo(displayName: displayName, photoUrl: photoUrl);
     token = await _loadToken();
