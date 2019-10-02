@@ -1,6 +1,6 @@
 # fb_auth
 
-A Shared Firebase Auth Plugin for Mobile and Web. Included AuthBloc for minimal setup! Single dynamic import and compile time ready for ios, android and web.
+A Shared Firebase Auth Plugin for Mobile, Web and Desktop. Included AuthBloc for minimal setup! Single dynamic import and compile time ready for ios, android, macos, windows, linux and web.
 
 ## Getting Started
 
