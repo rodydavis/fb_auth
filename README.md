@@ -80,6 +80,12 @@ _auth.dispatch(LogoutEvent(_user));
 _auth.dispatch(LoginEvent(_email, _password));
 ```
 
+- Guest
+
+```dart
+_auth.dispatch(LoginGuest());
+```
+
 - Create Account
 
 ```dart

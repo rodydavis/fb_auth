@@ -1,4 +1,11 @@
-## 2.0.0
+## 1.0.0
+
+* Adding Support for Desktop
+* Updated Example for Desktop
+* Adding App Config Requirement
+* Fixing Bugs with `io` auth
+
+## 0.0.2
 
 * Add Sign In As Guest
 
