@@ -55,11 +55,12 @@ class FbClient {
   }
 
   Future logout() async {
-    throw 'Platform Not Supported';
+    // throw 'Platform Not Supported';
   }
 
   Future<AuthUser> currentUser() async {
-    throw 'Platform Not Supported';
+    // throw 'Platform Not Supported';
+    return null;
   }
 
   Future<AuthUser> startAsGuest() async {
@@ -101,7 +102,8 @@ class FbClient {
   }
 
   Stream<AuthUser> onAuthChanged() {
-    throw 'Platform Not Supported';
+    // throw 'Platform Not Supported';
+    return null;
   }
 
   Future editInfo({String displayName, String photoUrl}) async {
@@ -133,10 +135,10 @@ class FbClient {
   }
 
   Future forgotPassword(String email) async {
-    throw 'Platform Not Supported';
+    // throw 'Platform Not Supported';
   }
 
   Future sendEmailVerification() async {
-    throw 'Platform Not Supported';
+    // throw 'Platform Not Supported';
   }
 }
