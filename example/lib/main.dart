@@ -12,24 +12,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  StreamSubscription<AuthUser> _userChanged;
-  final _auth = AuthBloc(
-    saveUser: _saveUser,
-    deleteUser: _deleteUser,
+  final _app = FbApp(
+    apiKey: "API_KEY",
+    authDomain: "AUTH_DOMAIN",
+    databaseURL: "DATABASE_URL",
+    projectId: "PROJECT_ID",
+    storageBucket: "STORAGE_BUCKET",
+    messagingSenderId: "MESSAGING_SENDER_ID",
+    appId: "APP_ID",
   );
 
-  static _deleteUser() async {}
-  static _saveUser(user) async {}
-
-  @override
-  void initState() {
-    _auth.dispatch(CheckUser());
-    final _fbAuth = FBAuth();
-    _userChanged = _fbAuth.onAuthChanged().listen((user) {
-      _auth.dispatch(UpdateUser(user));
-    });
-    super.initState();
-  }
+  AuthBloc _auth;
+  StreamSubscription<AuthUser> _userChanged;
 
   @override
   void dispose() {
@@ -37,6 +31,21 @@ class _MyAppState extends State<MyApp> {
     _userChanged.cancel();
     super.dispose();
   }
+
+  @override
+  void initState() {
+    _auth = AuthBloc(saveUser: _saveUser, deleteUser: _deleteUser, app: _app);
+    _auth.dispatch(CheckUser());
+    final _fbAuth = FBAuth(_app);
+    _userChanged = _fbAuth.onAuthChanged().listen((user) {
+      _auth.dispatch(UpdateUser(user));
+    });
+    super.initState();
+  }
+
+  static _deleteUser() async {}
+
+  static _saveUser(user) async {}
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +84,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String _email, _password, _name;
   bool _createAccount = true;
   final _formKey = GlobalKey<FormState>();
+  String _email, _password, _name;
+
   @override
   Widget build(BuildContext context) {
     final _auth = BlocProvider.of<AuthBloc>(context);

@@ -1,9 +1,51 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:fb_auth/data/services/rest_api/client.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../classes/index.dart';
 
 class FBAuth {
+  final FbApp app;
+  final bool useRestClient;
+  File _saveFile;
   final _auth = FirebaseAuth.instance;
+
+  FBAuth(
+    this.app, {
+    this.useRestClient = false,
+  }) {
+    _client = FbClient(
+      app,
+      onLoad: () async {
+        final dir = await _getDocumentDir();
+        _saveFile = File('${dir.path}/fb_auth.json');
+        Map<String, dynamic> storage = Map<String, dynamic>();
+        if (await _saveFile.exists()) {
+          try {
+            storage = json.decode(await _saveFile.readAsString())
+                as Map<String, dynamic>;
+            return storage;
+          } catch (_) {
+            await _saveFile.delete();
+          }
+        }
+        return null;
+      },
+      onSave: (data) async {
+        try {
+          await _saveFile.writeAsString(json.encode(data));
+        } catch (e) {}
+      },
+    );
+  }
+  bool get useClient => isDesktop || useRestClient;
+  bool get isDesktop =>
+      Platform.isWindows || Platform.isWindows || Platform.isMacOS;
+
+  FbClient _client;
 
   Future<AuthUser> login(String username, String password) async {
     try {
@@ -40,16 +82,22 @@ class FBAuth {
   }
 
   Future<AuthUser> startAsGuest() async {
-    final _result = await _auth.signInAnonymously();
-    if (_result != null && _result?.user != null) {
-      final _user = AuthUser(
-        uid: _result.user.uid,
-        displayName: _result.user.displayName,
-        email: _result.user?.email,
-        isAnonymous: _result.user.isAnonymous,
-        isEmailVerified: _result.user.isEmailVerified,
-      );
-      return _user;
+    if (useClient) {
+      try {
+        return _client.startAsGuest();
+      } catch (e) {}
+    } else {
+      final _result = await _auth.signInAnonymously();
+      if (_result != null && _result?.user != null) {
+        final _user = AuthUser(
+          uid: _result.user.uid,
+          displayName: _result.user.displayName,
+          email: _result.user?.email,
+          isAnonymous: _result.user.isAnonymous,
+          isEmailVerified: _result.user.isEmailVerified,
+        );
+        return _user;
+      }
     }
     return null;
   }
@@ -60,6 +108,9 @@ class FBAuth {
     } catch (e) {
       print('FBAuthUtils -> logout -> $e');
     }
+    try {
+      await _saveFile.delete();
+    } catch (e) {}
     return null;
   }
 
@@ -119,5 +170,14 @@ class FBAuth {
       await editInfo(displayName: displayName, photoUrl: photoUrl);
     }
     return await currentUser();
+  }
+
+  static Future<Directory> _getDocumentDir() async {
+    if (Platform.isMacOS || Platform.isLinux) {
+      return Directory('${Platform.environment['HOME']}/.config');
+    } else if (Platform.isWindows) {
+      return Directory('${Platform.environment['UserProfile']}\\.config');
+    }
+    return await getApplicationDocumentsDirectory();
   }
 }

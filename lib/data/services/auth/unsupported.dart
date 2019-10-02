@@ -1,6 +1,10 @@
 import '../../classes/index.dart';
 
 class FBAuth {
+  final FbApp app;
+
+  FBAuth(this.app);
+
   Future<AuthUser> login(String username, String password) async {
     throw 'Platform Not Supported';
   }

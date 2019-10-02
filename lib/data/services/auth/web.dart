@@ -3,7 +3,10 @@ import 'package:firebase/firebase.dart';
 import '../../classes/index.dart';
 
 class FBAuth {
+  final FbApp app;
   final _auth = auth();
+
+  FBAuth(this.app);
 
   Future _setPersistenceWeb(Auth _auth) async {
     try {
