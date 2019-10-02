@@ -20,14 +20,13 @@ class FbClient implements FBAuth {
   @override
   Future<AuthUser> createAccount(String username, String password,
       {String displayName, String photoUrl}) async {
-    http.Response result = await http.post(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${app.apiKey}',
-      body: {
-        "email": username,
-        "password": password,
-        "returnSecureToken": true,
-      },
-    );
+    final result = await http.post(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${app.apiKey}',
+        body: json.encode({
+          "email": username,
+          "password": password,
+          "returnSecureToken": true,
+        }));
     FirestoreJsonAccessToken token = await _saveToken(result);
     await editInfo(displayName: displayName, photoUrl: photoUrl);
     token = await _loadToken();
@@ -36,7 +35,18 @@ class FbClient implements FBAuth {
 
   @override
   Future<AuthUser> currentUser() async {
-    // throw 'Platform Not Supported';
+    FirestoreJsonAccessToken token = await _loadToken();
+    if (token != null) {
+      var result = await http.post(
+        'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${app.apiKey}',
+        body: json.encode({
+          "idToken": token?.idToken,
+          "returnSecureToken": true,
+        }),
+      );
+      token = await _saveToken(result);
+      return _getUser(token);
+    }
     return null;
   }
 
@@ -45,7 +55,7 @@ class FbClient implements FBAuth {
     FirestoreJsonAccessToken token = await _loadToken();
     final result = await http.post(
       'https://identitytoolkit.googleapis.com/v1/accounts:update?key=${app.apiKey}',
-      body: {
+      body: json.encode({
         "idToken": token?.idToken,
         if (displayName != null) ...{
           'displayName': displayName,
@@ -58,7 +68,7 @@ class FbClient implements FBAuth {
           if (photoUrl == null) 'PHOTO_URL',
         ],
         "returnSecureToken": true,
-      },
+      }),
     );
     await _saveToken(result);
   }
@@ -72,11 +82,11 @@ class FbClient implements FBAuth {
   Future<AuthUser> login(String username, String password) async {
     final result = await http.post(
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${app.apiKey}',
-      body: {
+      body: json.encode({
         "email": username,
         "password": password,
         "returnSecureToken": true,
-      },
+      }),
     );
     final token = await _saveToken(result);
     return _getUser(token);

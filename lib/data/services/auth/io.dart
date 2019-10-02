@@ -53,6 +53,7 @@ class FBAuth {
 
   Future<AuthUser> login(String username, String password) async {
     if (useClient) {
+      return _client.login(username, password);
     } else {
       return _sdk.login(username, password);
     }
@@ -61,10 +62,10 @@ class FBAuth {
 
   Stream<AuthUser> onAuthChanged() {
     if (useClient) {
+      return _client.onAuthChanged();
     } else {
       return _sdk.onAuthChanged();
     }
-    return null;
   }
 
   Future<AuthUser> startAsGuest() async {
@@ -80,6 +81,7 @@ class FBAuth {
 
   Future logout() async {
     if (useClient) {
+      await _client.logout();
     } else {
       await _sdk.logout();
     }
@@ -91,14 +93,18 @@ class FBAuth {
 
   Future<AuthUser> currentUser() async {
     if (useClient) {
+      return _client.currentUser();
     } else {
       return _sdk.currentUser();
     }
-    return null;
   }
 
   Future editInfo({String displayName, String photoUrl}) async {
     if (useClient) {
+      return _client.editInfo(
+        displayName: displayName,
+        photoUrl: photoUrl,
+      );
     } else {
       return _sdk.editInfo(
         displayName: displayName,
@@ -109,6 +115,7 @@ class FBAuth {
 
   Future forgotPassword(String email) async {
     if (useClient) {
+      return _client.forgotPassword(email);
     } else {
       return _sdk.forgotPassword(email);
     }
@@ -116,6 +123,7 @@ class FBAuth {
 
   Future sendEmailVerification() async {
     if (useClient) {
+      return _client.sendEmailVerification();
     } else {
       return _sdk.sendEmailVerification();
     }
@@ -124,6 +132,12 @@ class FBAuth {
   Future<AuthUser> createAccount(String username, String password,
       {String displayName, String photoUrl}) async {
     if (useClient) {
+      return _client.createAccount(
+        username,
+        password,
+        photoUrl: photoUrl,
+        displayName: displayName,
+      );
     } else {
       return _sdk.createAccount(
         username,
