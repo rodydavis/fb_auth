@@ -9,16 +9,19 @@ import '../../../fb_auth.dart';
 import '../../classes/auth_user.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  /// Called every time the user info changes. You can use this method for updating a database.
-  final Function(AuthUser) saveUser;
+  AuthBloc({
+    @required this.app,
+    this.saveUser,
+    this.deleteUser,
+  }) : _auth = FBAuth(app);
 
-  /// Called when the user logs out. You can use this method for updating a database.
-  final Function() deleteUser;
+  final FbApp app;
 
-  AuthBloc({this.saveUser, this.deleteUser});
+  final FBAuth _auth;
+
   @override
   AuthState get initialState => InitialAuthState();
-  final _auth = FBAuth();
+
   @override
   Stream<AuthState> mapEventToState(
     AuthEvent event,
@@ -51,6 +54,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield* _mapGuestToState(event);
     }
   }
+
+  /// Called every time the user info changes. You can use this method for updating a database.
+  final Function(AuthUser) saveUser;
+
+  /// Called when the user logs out. You can use this method for updating a database.
+  final Function() deleteUser;
 
   Stream<AuthState> _mapGuestToState(LoginGuest event) async* {
     yield AuthLoadingState();

@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../classes/index.dart';
+import '../auth/unsupported.dart';
 
-class FBAuth {
+class FbSdk implements FBAuth {
   final _auth = FirebaseAuth.instance;
-
+  
+  @override
   Future<AuthUser> login(String username, String password) async {
     try {
       final _result = await _auth.signInWithEmailAndPassword(
@@ -25,6 +27,7 @@ class FBAuth {
     return null;
   }
 
+  @override
   Stream<AuthUser> onAuthChanged() {
     return _auth.onAuthStateChanged.map((user) {
       if (user == null) return null;
@@ -39,6 +42,7 @@ class FBAuth {
     });
   }
 
+  @override
   Future<AuthUser> startAsGuest() async {
     final _result = await _auth.signInAnonymously();
     if (_result != null && _result?.user != null) {
@@ -54,15 +58,16 @@ class FBAuth {
     return null;
   }
 
+  @override
   Future logout() async {
     try {
       await _auth.signOut();
     } catch (e) {
       print('FBAuthUtils -> logout -> $e');
     }
-    return null;
   }
 
+  @override
   Future<AuthUser> currentUser() async {
     try {
       final _result = await _auth.currentUser();
@@ -82,6 +87,7 @@ class FBAuth {
     return null;
   }
 
+  @override
   Future editInfo({String displayName, String photoUrl}) async {
     final _user = await _auth.currentUser();
     final _info = UserUpdateInfo();
@@ -94,6 +100,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future forgotPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -102,6 +109,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future sendEmailVerification() async {
     try {
       final _user = await _auth.currentUser();
@@ -111,6 +119,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future<AuthUser> createAccount(String username, String password,
       {String displayName, String photoUrl}) async {
     final _user = await _auth.createUserWithEmailAndPassword(
@@ -120,4 +129,7 @@ class FBAuth {
     }
     return await currentUser();
   }
+
+  @override
+  FbApp get app => null;
 }
