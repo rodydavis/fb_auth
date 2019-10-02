@@ -20,21 +20,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _app = FbApp(
-    // apiKey: "API_KEY",
-    // authDomain: "AUTH_DOMAIN",
-    // databaseURL: "DATABASE_URL",
-    // projectId: "PROJECT_ID",
-    // storageBucket: "STORAGE_BUCKET",
-    // messagingSenderId: "MESSAGING_SENDER_ID",
-    // appId: "APP_ID",
-    apiKey: "AIzaSyCBotmOEP9eOpsvh0HFWRqtMki5qcQdzgk",
-    authDomain: "ampstor.firebaseapp.com",
-    databaseURL: "https://ampstor.firebaseio.com",
-    projectId: "ampstor",
-    storageBucket: "ampstor.appspot.com",
-    messagingSenderId: "561515444898",
-    appId: "1:561515444898:web:9060ee5d860d2ef2",
-    measurementId: "G-2WF699JDJP",
+    apiKey: "API_KEY",
+    authDomain: "AUTH_DOMAIN",
+    databaseURL: "DATABASE_URL",
+    projectId: "PROJECT_ID",
+    storageBucket: "STORAGE_BUCKET",
+    messagingSenderId: "MESSAGING_SENDER_ID",
+    appId: "APP_ID",
   );
 
   AuthBloc _auth;
@@ -52,12 +44,9 @@ class _MyAppState extends State<MyApp> {
     _auth = AuthBloc(saveUser: _saveUser, deleteUser: _deleteUser, app: _app);
     _auth.dispatch(CheckUser());
     final _fbAuth = FBAuth(_app);
-    final _authUpdate = _fbAuth.onAuthChanged();
-    if (_authUpdate != null) {
-      _userChanged = _authUpdate.listen((user) {
-        _auth.dispatch(UpdateUser(user));
-      });
-    }
+    _userChanged = _fbAuth.onAuthChanged().listen((user) {
+      _auth.dispatch(UpdateUser(user));
+    });
     super.initState();
   }
 
