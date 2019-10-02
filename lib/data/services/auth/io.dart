@@ -19,8 +19,7 @@ class FBAuth {
       _client = FbClient(
         app,
         onLoad: () async {
-          final dir = await PathUtils.getDocumentDir();
-          _saveFile = File('${dir.path}/fb_auth.json');
+          await _loadFile();
           Map<String, dynamic> storage = Map<String, dynamic>();
           if (await _saveFile.exists()) {
             try {
@@ -44,6 +43,14 @@ class FBAuth {
       _sdk = FbSdk();
     }
   }
+
+  Future _loadFile() async {
+    if (_saveFile == null) {
+      final dir = await PathUtils.getDocumentDir();
+      _saveFile = File('${dir.path}/fb_auth.json');
+    }
+  }
+
   bool get useClient => isDesktop || useRestClient;
   static bool get isDesktop =>
       Platform.isWindows || Platform.isWindows || Platform.isMacOS;
@@ -53,11 +60,11 @@ class FBAuth {
 
   Future<AuthUser> login(String username, String password) async {
     if (useClient) {
+      await _loadFile();
       return _client.login(username, password);
     } else {
       return _sdk.login(username, password);
     }
-    return null;
   }
 
   Stream<AuthUser> onAuthChanged() {
@@ -71,6 +78,7 @@ class FBAuth {
   Future<AuthUser> startAsGuest() async {
     try {
       if (useClient) {
+        await _loadFile();
         return _client.startAsGuest();
       } else {
         return _sdk.startAsGuest();
@@ -81,6 +89,7 @@ class FBAuth {
 
   Future logout() async {
     if (useClient) {
+      await _loadFile();
       await _client.logout();
     } else {
       await _sdk.logout();
@@ -93,6 +102,7 @@ class FBAuth {
 
   Future<AuthUser> currentUser() async {
     if (useClient) {
+      await _loadFile();
       return _client.currentUser();
     } else {
       return _sdk.currentUser();
@@ -101,6 +111,7 @@ class FBAuth {
 
   Future editInfo({String displayName, String photoUrl}) async {
     if (useClient) {
+      await _loadFile();
       return _client.editInfo(
         displayName: displayName,
         photoUrl: photoUrl,
@@ -115,6 +126,7 @@ class FBAuth {
 
   Future forgotPassword(String email) async {
     if (useClient) {
+      await _loadFile();
       return _client.forgotPassword(email);
     } else {
       return _sdk.forgotPassword(email);
@@ -123,6 +135,7 @@ class FBAuth {
 
   Future sendEmailVerification() async {
     if (useClient) {
+      await _loadFile();
       return _client.sendEmailVerification();
     } else {
       return _sdk.sendEmailVerification();
@@ -132,6 +145,7 @@ class FBAuth {
   Future<AuthUser> createAccount(String username, String password,
       {String displayName, String photoUrl}) async {
     if (useClient) {
+      await _loadFile();
       return _client.createAccount(
         username,
         password,
@@ -146,6 +160,5 @@ class FBAuth {
         displayName: displayName,
       );
     }
-    return null;
   }
 }
