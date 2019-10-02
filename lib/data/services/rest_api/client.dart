@@ -126,7 +126,6 @@ class FbClient implements FBAuth {
 
   Future<FirestoreJsonAccessToken> _saveToken(http.Response result) async {
     final _data = json.decode(result.body);
-    print('Token -> $_data');
     final token = FirestoreJsonAccessToken(_data, DateTime.now());
     await onSave(_data);
     return token;
