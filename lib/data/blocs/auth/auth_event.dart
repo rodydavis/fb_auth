@@ -13,6 +13,8 @@ class LoginEvent extends AuthEvent {
   final String username, password;
 }
 
+class LoginGuest extends AuthEvent {}
+
 class CreateAccount extends AuthEvent {
   CreateAccount(this.username, this.password,
       {this.displayName, this.photoUrl});

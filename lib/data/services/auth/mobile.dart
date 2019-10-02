@@ -39,6 +39,21 @@ class FBAuth {
     });
   }
 
+  Future<AuthUser> startAsGuest() async {
+    final _result = await _auth.signInAnonymously();
+    if (_result != null && _result?.user != null) {
+      final _user = AuthUser(
+        uid: _result.user.uid,
+        displayName: _result.user.displayName,
+        email: _result.user?.email,
+        isAnonymous: _result.user.isAnonymous,
+        isEmailVerified: _result.user.isEmailVerified,
+      );
+      return _user;
+    }
+    return null;
+  }
+
   Future logout() async {
     try {
       await _auth.signOut();

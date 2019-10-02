@@ -35,6 +35,26 @@ class FBAuth {
     return null;
   }
 
+  Future<AuthUser> startAsGuest() async {
+    await _setPersistenceWeb(_auth);
+    try {
+      final _result = await _auth.signInAnonymously();
+      if (_result != null && _result?.user != null) {
+        final _user = AuthUser(
+          uid: _result.user.uid,
+          displayName: _result.user.displayName,
+          email: _result.user?.email,
+          isAnonymous: _result.user.isAnonymous,
+          isEmailVerified: _result.user.emailVerified,
+        );
+        return _user;
+      }
+    } catch (e) {
+      print('FBAuthUtils -> startAsGuest -> $e');
+    }
+    return null;
+  }
+
   Future logout() async {
     try {
       await _auth.signOut();

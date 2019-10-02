@@ -47,6 +47,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is SendEmailVerification) {
       yield* _mapVerifyToState(event);
     }
+    if (event is LoginGuest) {
+      yield* _mapGuestToState(event);
+    }
+  }
+
+  Stream<AuthState> _mapGuestToState(LoginGuest event) async* {
+    yield AuthLoadingState();
+    final _user = await _auth.startAsGuest();
+    if (_user != null) {
+      if (saveUser != null) saveUser(_user);
+      yield LoggedInState(_user);
+    } else {
+      yield LoggedOutState();
+    }
   }
 
   Stream<AuthState> _mapCheckToState(CheckUser event) async* {

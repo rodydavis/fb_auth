@@ -18,6 +18,10 @@ class FBAuth {
     throw 'Platform Not Supported';
   }
 
+  Future<AuthUser> startAsGuest() async {
+    throw 'Platform Not Supported';
+  }
+
   Stream<AuthUser> onAuthChanged() {
     throw 'Platform Not Supported';
   }
