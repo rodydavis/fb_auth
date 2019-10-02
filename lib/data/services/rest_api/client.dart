@@ -17,9 +17,10 @@ class FbClient implements FBAuth {
     _onAuthChanged = StreamController<AuthUser>();
   }
 
+  StreamController<AuthUser> _onAuthChanged;
+
   @override
   final FbApp app;
-  StreamController<AuthUser> _onAuthChanged;
 
   @override
   Future<AuthUser> createAccount(String username, String password,
@@ -110,7 +111,7 @@ class FbClient implements FBAuth {
 
   @override
   Future logout() async {
-    onSave({});
+    onSave(null);
     _onAuthChanged.add(null);
   }
 

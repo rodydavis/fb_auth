@@ -34,7 +34,11 @@ class FBAuth {
         },
         onSave: (data) async {
           try {
-            await _saveFile.writeAsString(json.encode(data));
+            if (data == null) {
+              await _saveFile.delete();
+            } else {
+              await _saveFile.writeAsString(json.encode(data));
+            }
           } catch (e) {}
         },
       );
