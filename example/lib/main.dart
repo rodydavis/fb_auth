@@ -1,10 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:fb_auth/fb_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() => runApp(MyApp());
+import 'plugins/desktop/desktop.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setTargetPlatformForDesktop();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -13,13 +19,20 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _app = FbApp(
-    apiKey: "API_KEY",
-    authDomain: "AUTH_DOMAIN",
-    databaseURL: "DATABASE_URL",
-    projectId: "PROJECT_ID",
-    storageBucket: "STORAGE_BUCKET",
-    messagingSenderId: "MESSAGING_SENDER_ID",
-    appId: "APP_ID",
+    // apiKey: "API_KEY",
+    // authDomain: "AUTH_DOMAIN",
+    // databaseURL: "DATABASE_URL",
+    // projectId: "PROJECT_ID",
+    // storageBucket: "STORAGE_BUCKET",
+    // messagingSenderId: "MESSAGING_SENDER_ID",
+    // appId: "APP_ID",
+    apiKey: "AIzaSyCBotmOEP9eOpsvh0HFWRqtMki5qcQdzgk",
+    authDomain: "ampstor.firebaseapp.com",
+    databaseURL: "https://ampstor.firebaseio.com",
+    projectId: "ampstor",
+    storageBucket: "ampstor.appspot.com",
+    messagingSenderId: "561515444898",
+    appId: "1:561515444898:web:9060ee5d860d2ef2",
   );
 
   AuthBloc _auth;
