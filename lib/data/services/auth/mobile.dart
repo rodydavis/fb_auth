@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fb_auth/data/services/rest_api/client.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../classes/index.dart';
+import '../../utils/directory.dart';
+import '../rest_api/client.dart';
 
 class FBAuth {
   final FbApp app;
@@ -20,7 +20,7 @@ class FBAuth {
     _client = FbClient(
       app,
       onLoad: () async {
-        final dir = await _getDocumentDir();
+        final dir = await PathUtils.getDocumentDir();
         _saveFile = File('${dir.path}/fb_auth.json');
         Map<String, dynamic> storage = Map<String, dynamic>();
         if (await _saveFile.exists()) {
@@ -170,14 +170,5 @@ class FBAuth {
       await editInfo(displayName: displayName, photoUrl: photoUrl);
     }
     return await currentUser();
-  }
-
-  static Future<Directory> _getDocumentDir() async {
-    if (Platform.isMacOS || Platform.isLinux) {
-      return Directory('${Platform.environment['HOME']}/.config');
-    } else if (Platform.isWindows) {
-      return Directory('${Platform.environment['UserProfile']}\\.config');
-    }
-    return await getApplicationDocumentsDirectory();
   }
 }
