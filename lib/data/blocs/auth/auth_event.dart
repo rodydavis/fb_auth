@@ -41,6 +41,16 @@ class ForgotPassword extends AuthEvent {
   final String email;
 }
 
+class LoginGoogle extends AuthEvent {
+  LoginGoogle({
+    this.accessToken,
+    this.idToken,
+  });
+
+  final String idToken;
+  final String accessToken;
+}
+
 class SendEmailVerification extends AuthEvent {}
 
 class EditInfo extends AuthEvent {

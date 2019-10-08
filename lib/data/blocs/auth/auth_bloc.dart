@@ -53,6 +53,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is LoginGuest) {
       yield* _mapGuestToState(event);
     }
+    if (event is LoginGoogle) {
+      yield* _mapGoogleToState(event);
+    }
   }
 
   /// Called every time the user info changes. You can use this method for updating a database.
@@ -60,6 +63,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   /// Called when the user logs out. You can use this method for updating a database.
   final Function() deleteUser;
+
+  Stream<AuthState> _mapGoogleToState(LoginGoogle event) async* {
+    yield AuthLoadingState();
+    final _user = await _auth.loginGoogle(idToken: event.idToken, accessToken: event.accessToken);
+    if (_user != null) {
+      if (saveUser != null) saveUser(_user);
+      yield LoggedInState(_user);
+    } else {
+      yield LoggedOutState();
+    }
+  }
 
   Stream<AuthState> _mapGuestToState(LoginGuest event) async* {
     yield AuthLoadingState();

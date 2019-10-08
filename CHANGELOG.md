@@ -1,3 +1,9 @@
+## 1.0.1
+
+* Support for Login with Access Token
+* Support for Google Sign In for Mobile and Web
+
+
 ## 1.0.0
 
 * Adding Support for Desktop

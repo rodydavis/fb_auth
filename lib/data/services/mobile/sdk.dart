@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../classes/index.dart';
-import '../auth/unsupported.dart';
+import '../auth/impl.dart';
 
-class FbSdk implements FBAuth {
+class FbSdk implements FBAuthImpl {
   final _auth = FirebaseAuth.instance;
-  
+
   @override
   Future<AuthUser> login(String username, String password) async {
     try {
@@ -132,4 +132,46 @@ class FbSdk implements FBAuth {
 
   @override
   FbApp get app => null;
+
+  @override
+  Future loginGoogle({String idToken, String accessToken}) async {
+    final _cred = GoogleAuthProvider.getCredential(
+        idToken: idToken, accessToken: accessToken);
+    try {
+      final _result = await _auth.signInWithCredential(_cred);
+      if (_result != null && _result?.user != null) {
+        final _user = AuthUser(
+          uid: _result.user.uid,
+          displayName: _result.user.displayName,
+          email: _result.user?.email,
+          isAnonymous: _result.user.isAnonymous,
+          isEmailVerified: _result.user.isEmailVerified,
+        );
+        return _user;
+      }
+    } catch (e) {
+      print('FBAuthUtils -> loginGoogle -> $e');
+    }
+    return null;
+  }
+
+  @override
+  Future loginCustomToken(String token) async {
+    try {
+      final _result = await _auth.signInWithCustomToken(token: token);
+      if (_result != null && _result?.user != null) {
+        final _user = AuthUser(
+          uid: _result.user.uid,
+          displayName: _result.user.displayName,
+          email: _result.user?.email,
+          isAnonymous: _result.user.isAnonymous,
+          isEmailVerified: _result.user.isEmailVerified,
+        );
+        return _user;
+      }
+    } catch (e) {
+      print('FBAuthUtils -> loginCustomToken -> $e');
+    }
+    return null;
+  }
 }

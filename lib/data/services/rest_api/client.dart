@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../../classes/index.dart';
-import '../auth/unsupported.dart';
+import '../auth/impl.dart';
 import 'helpers/index.dart';
 
-class FbClient implements FBAuth {
+class FbClient implements FBAuthImpl {
   FbClient(
     this.app, {
     @required this.onSave,
@@ -189,5 +189,15 @@ class FbClient implements FBAuth {
       return token;
     }
     return null;
+  }
+
+  @override
+  Future loginCustomToken(String token) {
+    throw 'Platform Not Supported';
+  }
+
+  @override
+  Future loginGoogle({String idToken, String accessToken}) {
+    throw 'Platform Not Supported';
   }
 }

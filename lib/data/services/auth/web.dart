@@ -1,8 +1,9 @@
 import 'package:firebase/firebase.dart';
 
 import '../../classes/index.dart';
+import 'impl.dart';
 
-class FBAuth {
+class FBAuth implements FBAuthImpl {
   final FbApp app;
   final _auth = auth();
 
@@ -17,6 +18,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future<AuthUser> login(String username, String password) async {
     await _setPersistenceWeb(_auth);
     try {
@@ -38,6 +40,7 @@ class FBAuth {
     return null;
   }
 
+  @override
   Future<AuthUser> startAsGuest() async {
     await _setPersistenceWeb(_auth);
     try {
@@ -58,6 +61,7 @@ class FBAuth {
     return null;
   }
 
+  @override
   Future logout() async {
     try {
       await _auth.signOut();
@@ -67,6 +71,7 @@ class FBAuth {
     return null;
   }
 
+  @override
   Stream<AuthUser> onAuthChanged() {
     return _auth.onAuthStateChanged.map((user) {
       if (user == null) return null;
@@ -81,6 +86,7 @@ class FBAuth {
     });
   }
 
+  @override
   Future<AuthUser> currentUser() async {
     await _setPersistenceWeb(_auth);
     try {
@@ -101,6 +107,7 @@ class FBAuth {
     return null;
   }
 
+  @override
   Future editInfo({String displayName, String photoUrl}) async {
     final _user = _auth.currentUser;
     final _info = UserProfile();
@@ -113,6 +120,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future forgotPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email);
@@ -121,6 +129,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future sendEmailVerification() async {
     try {
       final _user = _auth.currentUser;
@@ -130,6 +139,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future<AuthUser> createAccount(String username, String password,
       {String displayName, String photoUrl}) async {
     final _user =
@@ -138,5 +148,48 @@ class FBAuth {
       await editInfo(displayName: displayName, photoUrl: photoUrl);
     }
     return await currentUser();
+  }
+
+  @override
+  Future loginCustomToken(String token) async {
+    await _setPersistenceWeb(_auth);
+    try {
+      final _result = await _auth.signInAndRetrieveDataWithCustomToken(token);
+      if (_result != null && _result?.user != null) {
+        final _user = AuthUser(
+          uid: _result.user.uid,
+          displayName: _result.user.displayName,
+          email: _result.user?.email,
+          isAnonymous: _result.user.isAnonymous,
+          isEmailVerified: _result.user.emailVerified,
+        );
+        return _user;
+      }
+    } catch (e) {
+      print('FBAuthUtils -> loginCustomToken -> $e');
+    }
+    return null;
+  }
+
+  @override
+  Future loginGoogle({String idToken, String accessToken}) async {
+    final _cred = GoogleAuthProvider.credential(idToken, accessToken);
+    await _setPersistenceWeb(_auth);
+    try {
+      final _result = await _auth.signInAndRetrieveDataWithCredential(_cred);
+      if (_result != null && _result?.user != null) {
+        final _user = AuthUser(
+          uid: _result.user.uid,
+          displayName: _result.user.displayName,
+          email: _result.user?.email,
+          isAnonymous: _result.user.isAnonymous,
+          isEmailVerified: _result.user.emailVerified,
+        );
+        return _user;
+      }
+    } catch (e) {
+      print('FBAuthUtils -> loginCustomToken -> $e');
+    }
+    return null;
   }
 }
