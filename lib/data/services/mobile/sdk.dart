@@ -18,6 +18,7 @@ class FbSdk implements FBAuthImpl {
           email: _result.user?.email,
           isAnonymous: _result.user.isAnonymous,
           isEmailVerified: _result.user.isEmailVerified,
+          photoUrl: _result.user.photoUrl,
         );
         return _user;
       }
@@ -37,6 +38,7 @@ class FbSdk implements FBAuthImpl {
         email: user?.email,
         isAnonymous: user.isAnonymous,
         isEmailVerified: user.isEmailVerified,
+        photoUrl: user.photoUrl,
       );
       return _user;
     });
@@ -52,6 +54,7 @@ class FbSdk implements FBAuthImpl {
         email: _result.user?.email,
         isAnonymous: _result.user.isAnonymous,
         isEmailVerified: _result.user.isEmailVerified,
+        photoUrl: _result.user.photoUrl,
       );
       return _user;
     }
@@ -78,6 +81,7 @@ class FbSdk implements FBAuthImpl {
           email: _result?.email,
           isAnonymous: _result.isAnonymous,
           isEmailVerified: _result.isEmailVerified,
+          photoUrl: _result.photoUrl,
         );
         return _user;
       }
@@ -146,6 +150,7 @@ class FbSdk implements FBAuthImpl {
           email: _result.user?.email,
           isAnonymous: _result.user.isAnonymous,
           isEmailVerified: _result.user.isEmailVerified,
+          photoUrl: _result.user.photoUrl,
         );
         return _user;
       }
@@ -166,6 +171,7 @@ class FbSdk implements FBAuthImpl {
           email: _result.user?.email,
           isAnonymous: _result.user.isAnonymous,
           isEmailVerified: _result.user.isEmailVerified,
+          photoUrl: _result.user.photoUrl,
         );
         return _user;
       }

@@ -173,6 +173,7 @@ class FbClient implements FBAuthImpl {
             email: _user?.email,
             isAnonymous: _user?.isAnonymous ?? true,
             isEmailVerified: _user?.isEmailVerified ?? false,
+            photoUrl: _user.photoUrl,
             uid: _user?.uid,
           );
           _onAuthChanged.add(_auth);

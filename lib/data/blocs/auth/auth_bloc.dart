@@ -155,7 +155,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   static AuthUser currentUser(BuildContext context) {
     final auth = BlocProvider.of<AuthBloc>(context);
-    final state = auth.currentState;
+    final state = auth.state;
     if (state is LoggedInState) {
       return state.user;
     }

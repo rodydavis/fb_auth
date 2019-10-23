@@ -4,6 +4,7 @@ class AuthUser {
   final String uid;
   final String displayName;
   final String email;
+  final String photoUrl;
 
   AuthUser({
     @required this.uid,
@@ -11,6 +12,7 @@ class AuthUser {
     @required this.email,
     @required this.isEmailVerified,
     @required this.isAnonymous,
+    @required this.photoUrl,
   });
   final bool isEmailVerified;
   final bool isAnonymous;

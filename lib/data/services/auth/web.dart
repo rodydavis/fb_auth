@@ -31,6 +31,7 @@ class FBAuth implements FBAuthImpl {
           email: _result.user?.email,
           isAnonymous: _result.user.isAnonymous,
           isEmailVerified: _result.user.emailVerified,
+          photoUrl: _result.user.photoURL,
         );
         return _user;
       }
@@ -52,6 +53,7 @@ class FBAuth implements FBAuthImpl {
           email: _result.user?.email,
           isAnonymous: _result.user.isAnonymous,
           isEmailVerified: _result.user.emailVerified,
+          photoUrl: _result.user.photoURL,
         );
         return _user;
       }
@@ -81,6 +83,7 @@ class FBAuth implements FBAuthImpl {
         email: user?.email,
         isAnonymous: user.isAnonymous,
         isEmailVerified: user.emailVerified,
+        photoUrl: user.photoURL,
       );
       return _user;
     });
@@ -98,6 +101,7 @@ class FBAuth implements FBAuthImpl {
           email: _result?.email,
           isAnonymous: _result.isAnonymous,
           isEmailVerified: _result.emailVerified,
+          photoUrl: _result.photoURL,
         );
         return _user;
       }
@@ -162,6 +166,7 @@ class FBAuth implements FBAuthImpl {
           email: _result.user?.email,
           isAnonymous: _result.user.isAnonymous,
           isEmailVerified: _result.user.emailVerified,
+          photoUrl: _result.user.photoURL,
         );
         return _user;
       }
@@ -176,7 +181,7 @@ class FBAuth implements FBAuthImpl {
     final _cred = GoogleAuthProvider.credential(idToken, accessToken);
     await _setPersistenceWeb(_auth);
     try {
-      final _result = await _auth.signInAndRetrieveDataWithCredential(_cred);
+      final _result = await _auth.signInAndRetrieveDataWithCustomToken(accessToken);
       if (_result != null && _result?.user != null) {
         final _user = AuthUser(
           uid: _result.user.uid,
@@ -184,6 +189,7 @@ class FBAuth implements FBAuthImpl {
           email: _result.user?.email,
           isAnonymous: _result.user.isAnonymous,
           isEmailVerified: _result.user.emailVerified,
+          photoUrl: _result.user.photoURL,
         );
         return _user;
       }
