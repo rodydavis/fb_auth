@@ -66,7 +66,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _mapGoogleToState(LoginGoogle event) async* {
     yield AuthLoadingState();
-    final _user = await _auth.loginGoogle(idToken: event.idToken, accessToken: event.accessToken);
+    final _user = await _auth.loginGoogle(
+        idToken: event.idToken, accessToken: event.accessToken);
     if (_user != null) {
       if (saveUser != null) saveUser(_user);
       yield LoggedInState(_user);
@@ -99,13 +100,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _mapCreateToState(CreateAccount event) async* {
     yield AuthLoadingState();
-    AuthUser _user = await _auth.createAccount(event.username, event.password,
-        displayName: event?.displayName, photoUrl: event?.photoUrl);
-    if (_user != null) {
-      if (saveUser != null) saveUser(_user);
-      yield LoggedInState(_user);
-    } else {
-      yield AuthErrorState('Error creating user!');
+    try {
+      AuthUser _user = await _auth.createAccount(event.username, event.password,
+          displayName: event?.displayName, photoUrl: event?.photoUrl);
+      if (_user != null) {
+        if (saveUser != null) saveUser(_user);
+        yield LoggedInState(_user);
+      } else {
+        yield AuthErrorState('Error creating user!');
+      }
+    } catch (e) {
+      yield AuthErrorState('Email already exists!');
     }
   }
 

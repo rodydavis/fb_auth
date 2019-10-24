@@ -5,7 +5,6 @@ import '../auth/impl.dart';
 
 class FbSdk implements FBAuthImpl {
   final _auth = FirebaseAuth.instance;
-
   @override
   Future<AuthUser> login(String username, String password) async {
     try {
