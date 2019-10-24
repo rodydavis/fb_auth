@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        _auth.dispatch(CreateAccount(_email, _password,
+                        _auth.add(CreateAccount(_email, _password,
                             displayName: _name));
                       }
                     },
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        _auth.dispatch(LoginEvent(_email, _password));
+                        _auth.add(LoginEvent(_email, _password));
                       }
                     },
                   )),
@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     title: RaisedButton(
                   child: Text('Start as Guest'),
                   onPressed: () {
-                    _auth.dispatch(LoginGuest());
+                    _auth.add(LoginGuest());
                   },
                 )),
                 if (state is AuthLoadingState) ...[CircularProgressIndicator()],

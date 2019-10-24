@@ -126,10 +126,25 @@ class FbSdk implements FBAuthImpl {
   @override
   Future<AuthUser> createAccount(String username, String password,
       {String displayName, String photoUrl}) async {
-    final _user = await _auth.createUserWithEmailAndPassword(
-        email: username, password: password);
-    if (_user != null) {
-      await editInfo(displayName: displayName, photoUrl: photoUrl);
+    AuthResult _user;
+    try {
+      _user = await _auth.createUserWithEmailAndPassword(
+        email: username,
+        password: password,
+      );
+      if (_user != null) {
+        await editInfo(displayName: displayName, photoUrl: photoUrl);
+      }
+    } catch (e) {}
+    if (_user == null) {
+      try {
+        _user = await _auth.signInWithEmailAndPassword(
+          email: username,
+          password: password,
+        );
+      } catch (err) {
+        throw Exception(err);
+      }
     }
     return await currentUser();
   }

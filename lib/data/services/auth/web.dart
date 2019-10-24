@@ -146,10 +146,19 @@ class FBAuth implements FBAuthImpl {
   @override
   Future<AuthUser> createAccount(String username, String password,
       {String displayName, String photoUrl}) async {
-    final _user =
-        await _auth.createUserWithEmailAndPassword(username, password);
-    if (_user != null) {
-      await editInfo(displayName: displayName, photoUrl: photoUrl);
+    UserCredential _user;
+    try {
+      _user = await _auth.createUserWithEmailAndPassword(username, password);
+      if (_user != null) {
+        await editInfo(displayName: displayName, photoUrl: photoUrl);
+      }
+    } catch (e) {}
+    if (_user == null) {
+      try {
+        _user = await _auth.signInWithEmailAndPassword(username, password);
+      } catch (err) {
+        throw Exception(err);
+      }
     }
     return await currentUser();
   }
@@ -181,7 +190,7 @@ class FBAuth implements FBAuthImpl {
     final _cred = GoogleAuthProvider.credential(idToken, accessToken);
     await _setPersistenceWeb(_auth);
     try {
-      final _result = await _auth.signInAndRetrieveDataWithCustomToken(accessToken);
+      final _result = await _auth.signInWithCredential(_cred);
       if (_result != null && _result?.user != null) {
         final _user = AuthUser(
           uid: _result.user.uid,
