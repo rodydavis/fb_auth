@@ -23,6 +23,12 @@ class CreateAccount extends AuthEvent {
   final String displayName, photoUrl;
 }
 
+class ChangeUser extends AuthEvent {
+  ChangeUser(this.user);
+
+  final AuthUser user;
+}
+
 class LogoutEvent extends AuthEvent {
   LogoutEvent(this.user);
 

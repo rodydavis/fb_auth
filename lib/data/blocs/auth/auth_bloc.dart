@@ -56,6 +56,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is LoginGoogle) {
       yield* _mapGoogleToState(event);
     }
+    if (event is ChangeUser) {
+      yield LoggedInState(event.user);
+    }
   }
 
   /// Called every time the user info changes. You can use this method for updating a database.
