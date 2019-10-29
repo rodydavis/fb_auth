@@ -10,12 +10,12 @@ class FBAuth implements FBAuthImpl {
   FBAuth(this.app);
 
   Future _setPersistenceWeb(Auth _auth) async {
-    try {
-      var selectedPersistence = 'local';
-      await _auth.setPersistence(selectedPersistence);
-    } catch (e) {
-      print('_auth.setPersistence -> $e');
-    }
+    // try {
+    //   var selectedPersistence = 'local';
+    //   await _auth.setPersistence(selectedPersistence);
+    // } catch (e) {
+    //   print('_auth.setPersistence -> $e');
+    // }
   }
 
   @override
