@@ -177,11 +177,25 @@ class FBAuth implements FBAuthImpl {
 
   @override
   Future loginCustomToken(String token) async {
-    throw 'Platform Not Supported';
+    if (useClient) {
+      return _client.loginCustomToken(token);
+    } else {
+      return _sdk.loginCustomToken(token);
+    }
   }
 
   @override
   Future loginGoogle({String idToken, String accessToken}) async {
-    throw 'Platform Not Supported';
+    if (useClient) {
+      return _client.loginGoogle(
+        idToken: idToken,
+        accessToken: accessToken,
+      );
+    } else {
+      return _sdk.loginGoogle(
+        idToken: idToken,
+        accessToken: accessToken,
+      );
+    }
   }
 }
