@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Fixing Google Login (Mobile, Web)
+
 ## 1.0.3
 
 * Updating to `bloc 1.0.0`
