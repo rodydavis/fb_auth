@@ -1,6 +1,6 @@
 name: fb_auth
 description: A Web, Mobile Firebase Auth Plugin
-version: 1.0.6
+version: 1.1.0
 author: Rody Davis <rody.davis.jr@gmail.com>
 homepage: https://github.com/AppleEducate/fb_auth
 issue_tracker: https://github.com/AppleEducate/plugins/issues
@@ -13,8 +13,8 @@ dependencies:
     sdk: flutter
   firebase: ^6.0.0
   firebase_auth: ^0.14.0+5
-  bloc: ^1.0.0
-  flutter_bloc: ^1.0.0
+  bloc: ^2.0.0
+  flutter_bloc: ^2.0.0
   http: ^0.12.0+2
   path_provider: ^1.4.0
 

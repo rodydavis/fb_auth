@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Updating to Bloc 2.0.0
+
 ## 1.0.6
 
 * Fixing Google Login (Mobile, Web)
