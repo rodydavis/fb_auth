@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
         child: RaisedButton(
           child: Text('Logout'),
           onPressed: () {
-            BlocProvider.of<AuthBloc>(context).dispatch(LogoutEvent(_user));
+            BlocProvider.of<AuthBloc>(context).add(LogoutEvent(_user));
           },
         ),
       ),

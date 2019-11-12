@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    _auth.dispose();
+    _auth.close();
     _userChanged?.cancel();
     super.dispose();
   }
@@ -42,10 +42,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     _auth = AuthBloc(saveUser: _saveUser, deleteUser: _deleteUser, app: _app);
-    _auth.dispatch(CheckUser());
+    _auth.add(CheckUser());
     final _fbAuth = FBAuth(_app);
     _userChanged = _fbAuth.onAuthChanged().listen((user) {
-      _auth.dispatch(UpdateUser(user));
+      _auth.add(UpdateUser(user));
     });
     super.initState();
   }

@@ -23,6 +23,12 @@ class CreateAccount extends AuthEvent {
   final String displayName, photoUrl;
 }
 
+class ChangeUser extends AuthEvent {
+  ChangeUser(this.user);
+
+  final AuthUser user;
+}
+
 class LogoutEvent extends AuthEvent {
   LogoutEvent(this.user);
 
@@ -39,6 +45,16 @@ class ForgotPassword extends AuthEvent {
   ForgotPassword(this.email);
 
   final String email;
+}
+
+class LoginGoogle extends AuthEvent {
+  LoginGoogle({
+    this.accessToken,
+    this.idToken,
+  });
+
+  final String idToken;
+  final String accessToken;
 }
 
 class SendEmailVerification extends AuthEvent {}

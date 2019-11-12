@@ -5,8 +5,9 @@ import '../../classes/index.dart';
 import '../../utils/directory.dart';
 import '../mobile/sdk.dart';
 import '../rest_api/client.dart';
+import 'impl.dart';
 
-class FBAuth {
+class FBAuth implements FBAuthImpl {
   final FbApp app;
   final bool useRestClient;
   File _saveFile;
@@ -61,7 +62,7 @@ class FBAuth {
   static bool get isMobile => Platform.isIOS || Platform.isAndroid;
   FbSdk _sdk;
   FbClient _client;
-
+  @override
   Future<AuthUser> login(String username, String password) async {
     if (useClient) {
       await _loadFile();
@@ -71,6 +72,7 @@ class FBAuth {
     }
   }
 
+  @override
   Stream<AuthUser> onAuthChanged() {
     if (useClient) {
       return _client.onAuthChanged();
@@ -79,6 +81,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future<AuthUser> startAsGuest() async {
     try {
       if (useClient) {
@@ -91,6 +94,7 @@ class FBAuth {
     return null;
   }
 
+  @override
   Future logout() async {
     if (useClient) {
       await _loadFile();
@@ -104,6 +108,7 @@ class FBAuth {
     return null;
   }
 
+  @override
   Future<AuthUser> currentUser() async {
     if (useClient) {
       await _loadFile();
@@ -113,6 +118,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future editInfo({String displayName, String photoUrl}) async {
     if (useClient) {
       await _loadFile();
@@ -128,6 +134,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future forgotPassword(String email) async {
     if (useClient) {
       await _loadFile();
@@ -137,6 +144,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future sendEmailVerification() async {
     if (useClient) {
       await _loadFile();
@@ -146,6 +154,7 @@ class FBAuth {
     }
   }
 
+  @override
   Future<AuthUser> createAccount(String username, String password,
       {String displayName, String photoUrl}) async {
     if (useClient) {
@@ -162,6 +171,30 @@ class FBAuth {
         password,
         photoUrl: photoUrl,
         displayName: displayName,
+      );
+    }
+  }
+
+  @override
+  Future loginCustomToken(String token) async {
+    if (useClient) {
+      return _client.loginCustomToken(token);
+    } else {
+      return _sdk.loginCustomToken(token);
+    }
+  }
+
+  @override
+  Future loginGoogle({String idToken, String accessToken}) async {
+    if (useClient) {
+      return _client.loginGoogle(
+        idToken: idToken,
+        accessToken: accessToken,
+      );
+    } else {
+      return _sdk.loginGoogle(
+        idToken: idToken,
+        accessToken: accessToken,
       );
     }
   }
