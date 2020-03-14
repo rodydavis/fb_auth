@@ -1,6 +1,6 @@
 name: fb_auth_example
 description: Demonstrates how to use the fb_auth plugin.
-publish_to: 'none'
+publish_to: "none"
 version: 0.0.1+1
 
 environment:
@@ -9,8 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  bloc: ^2.0.0
-  flutter_bloc: ^2.0.0
+  bloc: ^3.0.0
+  flutter_bloc: ^3.2.0
   cupertino_icons: ^0.1.2
   fb_auth:
     path: ../
@@ -20,5 +20,4 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
-
   uses-material-design: true

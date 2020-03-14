@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Bumping Version
+
 ## 1.1.0
 
 * Updating to Bloc 2.0.0
