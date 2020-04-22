@@ -44,6 +44,22 @@ Update `/web/index.html` in the body tag.
   </script>
 ```
 
+As an alternative, you can avoid the`<script>` item with the `firebaseConfig` configuration by initializing the `FbApp` instance in your app as it is done in the plugin example `main.dart` file.
+
+```dart
+  final _app = FbApp(
+      apiKey: "API_KEY",
+      authDomain: "AUTH_DOMAIN",
+      databaseURL: "DATABASE_URL",
+      projectId: "PROJECT_ID",
+      storageBucket: "STORAGE_BUCKET",
+      messagingSenderId: "MESSAGING_SENDER_ID",
+      appId: "APP_ID",
+      measurementId: "MEASUREMENT_ID"
+  );
+```
+If the `<script>` item is present, it takes precedence over the initialization of the `FbApp` instance in dart code.
+
 Follow Installation Instructions for Mobile: https://pub.dev/packages/firebase_auth
 
 - Update `ios/Runner` and add the `GoogleService-Info.plist` downloaded from firebase

@@ -5,9 +5,23 @@ import 'impl.dart';
 
 class FBAuth implements FBAuthImpl {
   final FbApp app;
-  final _auth = auth();
+  Auth _auth;
 
-  FBAuth(this.app);
+  FBAuth(this.app) {
+    if (apps.isEmpty) {
+      initializeApp(
+          apiKey: this.app.apiKey,
+          authDomain: this.app.authDomain,
+          databaseURL: this.app.databaseURL,
+          projectId: this.app.projectId,
+          storageBucket: this.app.storageBucket,
+          messagingSenderId: this.app.messagingSenderId,
+          appId: this.app.appId,
+          measurementId: this.app.measurementId
+      );
+    }
+    _auth = auth();
+  }
 
   Future _setPersistenceWeb(Auth _auth) async {
     // try {

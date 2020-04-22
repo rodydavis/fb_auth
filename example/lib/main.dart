@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(builder: (_) => _auth),
+        BlocProvider<AuthBloc>(create: (_) => _auth),
       ],
       child: MaterialApp(
         home: AuthCheck(),
