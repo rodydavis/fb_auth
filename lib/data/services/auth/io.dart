@@ -3,7 +3,7 @@ import 'dart:io';
 
 import '../../classes/index.dart';
 import '../../utils/directory.dart';
-import '../mobile/sdk.dart';
+import '../sdk/sdk.dart';
 import '../rest_api/client.dart';
 import 'impl.dart';
 
@@ -44,7 +44,7 @@ class FBAuth implements FBAuthImpl {
         },
       );
     }
-    if (isMobile) {
+    else {
       _sdk = FbSdk();
     }
   }
@@ -56,12 +56,11 @@ class FBAuth implements FBAuthImpl {
     }
   }
 
-  bool get useClient => isDesktop || useRestClient;
-  static bool get isDesktop =>
-      Platform.isWindows || Platform.isWindows || Platform.isMacOS;
-  static bool get isMobile => Platform.isIOS || Platform.isAndroid;
+  bool get useClient => useRestClient || Platform.isWindows || Platform.isLinux;
+
   FbSdk _sdk;
   FbClient _client;
+
   @override
   Future<AuthUser> login(String username, String password) async {
     if (useClient) {
