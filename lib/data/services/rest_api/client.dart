@@ -44,14 +44,6 @@ class FbClient implements FBAuthImpl {
   Future<AuthUser> currentUser() async {
     FirestoreJsonAccessToken token = await _loadToken();
     if (token != null) {
-      var result = await http.post(
-        'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${app.apiKey}',
-        body: json.encode({
-          "idToken": token?.idToken,
-          "returnSecureToken": true,
-        }),
-      );
-      token = await _saveToken(result);
       return _getUser(token);
     }
     return null;
