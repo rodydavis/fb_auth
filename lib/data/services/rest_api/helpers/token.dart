@@ -1,11 +1,13 @@
 class FirestoreJsonAccessToken {
-  FirestoreJsonAccessToken(this.json, this.createdAt);
+
+  FirestoreJsonAccessToken(this.json);
 
   final Map<String, dynamic> json;
 
-  String get refreshToken => json["refresh_token"];
+  String get refreshToken => json['refresh_token'] ?? json['refreshToken'] ;
 
-  final DateTime createdAt;
+  String get createdDate => json['createdAt'] as String;
+  DateTime get createdAt => DateTime.parse(createdDate);
 
   DateTime get expiresAt =>
       createdAt.add(new Duration(seconds: expiresInSeconds));
@@ -16,11 +18,22 @@ class FirestoreJsonAccessToken {
 
   String get kind => json['kind'] as String;
 
-  String get idToken => json['idToken'];
+  String get idToken => json['idToken'] ?? json['id_token'];
 
-  String get localId => json['localId'] as String;
+  String get localId => json['localId'] ?? json['user_id'] as String;
 
   int get expiresInSeconds => int.tryParse(json["expiresIn"]);
 
   bool get emailVerified => json['emailVerified'];
+
+  bool isExpired() {
+    bool expired = false;
+
+    if (createdAt != null) {
+      DateTime now = DateTime.now();
+      expired = createdAt.difference(now).inSeconds < 0;
+    }
+
+    return expired;
+  }
 }
