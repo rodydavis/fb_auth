@@ -2,6 +2,8 @@
 
 A Shared Firebase Auth Plugin for Mobile, Web and Desktop. Included AuthBloc for minimal setup! Single dynamic import and compile time ready for ios, android, macos, windows, linux and web.
 
+This package is now deprecated and was originally created to add firebase on the desktop and web. You can now use the [FlutterFire](https://github.com/FirebaseExtended/flutterfire) packages to do anything this plugin could.
+
 ## Getting Started
 
 Setup your Bloc

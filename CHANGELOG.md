@@ -1,3 +1,7 @@
+# 1.2.0
+
+* Plugin is now deprecated
+
 ## 1.1.0
 
 * Updating to Bloc 2.0.0
