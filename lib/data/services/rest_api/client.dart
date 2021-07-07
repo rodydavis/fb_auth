@@ -9,8 +9,7 @@ import '../auth/impl.dart';
 import 'helpers/index.dart';
 
 class FbClient implements FBAuthImpl {
-  FbClient(
-    this.app, {
+  FbClient(this.app, {
     @required this.onSave,
     @required this.onLoad,
   }) {
@@ -45,14 +44,15 @@ class FbClient implements FBAuthImpl {
     FirestoreJsonAccessToken token = await _loadToken();
     if (token != null) {
       var result = await http.post(
-        'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${app.apiKey}',
+        'https://identitytoolkit.googleapis.com/v1/token?key=${app.apiKey}',
         body: json.encode({
-          "idToken": token?.idToken,
+          "refresh_token": token?.refreshToken,
+          "grant_type": 'refresh_token',
           "returnSecureToken": true,
         }),
       );
-      token = await _saveToken(result);
-      return _getUser(token);
+
+      return _getUser(await _saveRefreshToken(token, result));
     }
     return null;
   }
@@ -150,10 +150,30 @@ class FbClient implements FBAuthImpl {
   final Future Function(Map<String, dynamic>) onSave;
 
   Future<FirestoreJsonAccessToken> _saveToken(http.Response result) async {
-    final _data = json.decode(result.body);
-    final token = FirestoreJsonAccessToken(_data, DateTime.now());
+    var _data = json.decode(result.body);
+    _data['createdDate'] = DateTime.now().toIso8601String();
+
+    final token = FirestoreJsonAccessToken(_data);
     await onSave(_data);
     return token;
+  }
+
+  Future<FirestoreJsonAccessToken> _saveRefreshToken(FirestoreJsonAccessToken token, http.Response result) async {
+    final _data = json.decode(result.body);
+
+    Map<String, dynamic> refreshToken = Map<String, dynamic>();
+    refreshToken['kind'] = token.kind;
+    refreshToken['localId'] = token.localId;
+    refreshToken['email'] = token.email;
+    refreshToken['displayName'] = token.displayName;
+    refreshToken['idToken'] = _data['id_token'];
+    refreshToken['refreshToken'] = _data['refresh_token'];
+    refreshToken['expiresIn'] = _data['expires_in'];
+    refreshToken['createdDate'] = DateTime.now().toIso8601String();
+
+    final newToken = FirestoreJsonAccessToken(refreshToken);
+    await onSave(refreshToken);
+    return newToken;
   }
 
   Future<AuthUser> _getUser(FirestoreJsonAccessToken token) async {
@@ -186,7 +206,7 @@ class FbClient implements FBAuthImpl {
   Future<FirestoreJsonAccessToken> _loadToken() async {
     final _data = await onLoad();
     if (_data != null) {
-      final token = FirestoreJsonAccessToken(_data, DateTime.now());
+      final token = FirestoreJsonAccessToken(_data);
       return token;
     }
     return null;
